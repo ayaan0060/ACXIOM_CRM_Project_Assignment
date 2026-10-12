@@ -1,0 +1,39 @@
+@{ ViewData["Title"] = "Dashboard"; }
+
+<h4 class="mb-4">Dashboard</h4>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card p-3 text-center"><div class="fs-2 fw-bold text-primary">@ViewBag.TotalCustomers</div><div class="text-muted">Total Customers</div></div></div>
+    <div class="col-md-3"><div class="card p-3 text-center"><div class="fs-2 fw-bold text-info">@ViewBag.TotalLeads</div><div class="text-muted">Total Leads</div></div></div>
+    <div class="col-md-3"><div class="card p-3 text-center"><div class="fs-2 fw-bold text-warning">@ViewBag.OpenLeads</div><div class="text-muted">Open Leads</div></div></div>
+    <div class="col-md-3"><div class="card p-3 text-center"><div class="fs-2 fw-bold text-success">@ViewBag.WonOpportunities</div><div class="text-muted">Won Opportunities</div></div></div>
+    <div class="col-md-3"><div class="card p-3 text-center"><div class="fs-2 fw-bold text-secondary">@ViewBag.TotalOpportunities</div><div class="text-muted">Total Opportunities</div></div></div>
+    <div class="col-md-3"><div class="card p-3 text-center"><div class="fs-2 fw-bold text-primary">@ViewBag.OpenOpportunities</div><div class="text-muted">Open Opportunities</div></div></div>
+    <div class="col-md-3"><div class="card p-3 text-center"><div class="fs-2 fw-bold text-danger">@ViewBag.LostOpportunities</div><div class="text-muted">Lost Opportunities</div></div></div>
+    <div class="col-md-3"><div class="card p-3 text-center"><div class="fs-2 fw-bold text-success">₹@String.Format("{0:N0}", ViewBag.PipelineValue)</div><div class="text-muted">Pipeline Value</div></div></div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6"><div class="card p-3"><h6>Lead Status</h6><canvas id="leadChart" height="180"></canvas></div></div>
+    <div class="col-md-6"><div class="card p-3"><h6>Opportunity Pipeline</h6><canvas id="oppChart" height="180"></canvas></div></div>
+</div>
+
+@section Scripts {
+<script>
+    new Chart(document.getElementById('leadChart'), {
+        type: 'doughnut',
+        data: {
+            labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.LeadStatusLabels)),
+            datasets: [{ data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.LeadStatusData)), backgroundColor: ['#4e73df','#36b9cc','#1cc88a','#e74a3b','#858796'] }]
+        }
+    });
+    new Chart(document.getElementById('oppChart'), {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.StageLabels)),
+            datasets: [{ label: 'Count', data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.StageData)), backgroundColor: '#4e73df' }]
+        },
+        options: { scales: { y: { beginAtZero: true } } }
+    });
+</script>
+}

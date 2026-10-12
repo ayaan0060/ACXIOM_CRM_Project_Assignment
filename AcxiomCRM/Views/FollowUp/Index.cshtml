@@ -1,0 +1,41 @@
+@model IEnumerable<FollowUp>
+@{ ViewData["Title"] = "Follow-Ups"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>Follow-Ups @if (ViewBag.OverdueCount > 0) { <span class="badge bg-danger ms-2">@ViewBag.OverdueCount Overdue</span> }</h4>
+    <a href="/FollowUp/Create" class="btn btn-primary btn-sm">+ New Follow-Up</a>
+</div>
+
+<form class="d-flex mb-3 gap-2" method="get">
+    <select name="status" class="form-select" style="max-width:160px">
+        <option value="">All Statuses</option>
+        @foreach (var s in new[]{"Planned","Completed","Missed","Cancelled"})
+        { <option value="@s" selected="@(ViewBag.StatusFilter==s)">@s</option> }
+    </select>
+    <button class="btn btn-outline-secondary btn-sm">Filter</button>
+</form>
+
+<div class="card">
+<table class="table table-hover mb-0">
+    <thead class="table-light"><tr><th>Subject</th><th>Type</th><th>Date</th><th>Status</th><th>Related</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var f in Model)
+    {
+        var overdue = f.FollowUpDate < DateTime.Today && f.Status == "Planned";
+        <tr class="@(overdue ? "table-warning" : "")">
+            <td>@f.Subject</td>
+            <td>@f.FollowUpType</td>
+            <td>@f.FollowUpDate.ToString("dd MMM yyyy") @(overdue ? " ⚠️" : "")</td>
+            <td><span class="badge bg-@(f.Status=="Completed"?"success":f.Status=="Missed"?"danger":f.Status=="Cancelled"?"secondary":"info") text-dark">@f.Status</span></td>
+            <td>@f.RelatedType #@f.RelatedId</td>
+            <td>
+                <a href="/FollowUp/Edit/@f.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                { <a href="/FollowUp/Delete/@f.Id" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete?')">Delete</a> }
+            </td>
+        </tr>
+    }
+    @if (!Model.Any()) { <tr><td colspan="6" class="text-center text-muted">No follow-ups found.</td></tr> }
+    </tbody>
+</table>
+</div>

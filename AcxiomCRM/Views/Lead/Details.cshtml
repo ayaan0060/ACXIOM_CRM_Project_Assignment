@@ -1,0 +1,19 @@
+@model Lead
+@{ ViewData["Title"] = "Lead Details"; }
+
+<h4 class="mb-3">Lead Details</h4>
+<div class="card p-4" style="max-width:560px">
+    <dl class="row">
+        <dt class="col-4">Name</dt><dd class="col-8">@Model.Name</dd>
+        <dt class="col-4">Email</dt><dd class="col-8">@Model.Email</dd>
+        <dt class="col-4">Phone</dt><dd class="col-8">@Model.Phone</dd>
+        <dt class="col-4">Company</dt><dd class="col-8">@Model.CompanyName</dd>
+        <dt class="col-4">Source</dt><dd class="col-8">@Model.Source</dd>
+        <dt class="col-4">Status</dt><dd class="col-8"><span class="badge bg-info text-dark">@Model.Status</span></dd>
+        <dt class="col-4">Priority</dt><dd class="col-8">@Model.Priority</dd>
+        <dt class="col-4">Expected Value</dt><dd class="col-8">₹@Model.ExpectedValue.ToString("N2")</dd>
+        <dt class="col-4">Converted</dt><dd class="col-8">@(Model.IsConverted ? "Yes" : "No")</dd>
+    </dl>
+    <a href="/Lead/Edit/@Model.Id" class="btn btn-primary btn-sm me-2">Edit</a>
+    <a href="/Lead" class="btn btn-outline-secondary btn-sm">Back</a>
+</div>

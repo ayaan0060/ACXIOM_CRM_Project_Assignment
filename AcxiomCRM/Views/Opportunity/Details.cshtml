@@ -1,0 +1,18 @@
+@model Opportunity
+@{ ViewData["Title"] = "Opportunity Details"; }
+
+<h4 class="mb-3">Opportunity Details</h4>
+<div class="card p-4" style="max-width:560px">
+    <dl class="row">
+        <dt class="col-5">Name</dt><dd class="col-7">@Model.Name</dd>
+        <dt class="col-5">Customer</dt><dd class="col-7">@Model.Customer?.Name</dd>
+        <dt class="col-5">Stage</dt><dd class="col-7"><span class="badge bg-primary">@Model.Stage</span></dd>
+        <dt class="col-5">Amount</dt><dd class="col-7">₹@Model.Amount.ToString("N2")</dd>
+        <dt class="col-5">Probability</dt><dd class="col-7">@Model.Probability%</dd>
+        <dt class="col-5">Weighted Value</dt><dd class="col-7">₹@((Model.Amount * Model.Probability / 100).ToString("N2"))</dd>
+        <dt class="col-5">Expected Close</dt><dd class="col-7">@Model.ExpectedCloseDate.ToString("dd MMM yyyy")</dd>
+        <dt class="col-5">Notes</dt><dd class="col-7">@Model.Notes</dd>
+    </dl>
+    <a href="/Opportunity/Edit/@Model.Id" class="btn btn-primary btn-sm me-2">Edit</a>
+    <a href="/Opportunity" class="btn btn-outline-secondary btn-sm">Back</a>
+</div>

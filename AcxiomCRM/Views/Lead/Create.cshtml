@@ -1,0 +1,57 @@
+@model Lead
+@{ ViewData["Title"] = "New Lead"; }
+
+<h4 class="mb-3">New Lead</h4>
+<div class="card p-4" style="max-width:560px">
+<form method="post" asp-action="Create">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger small"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger small"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Phone" class="form-label"></label>
+        <input asp-for="Phone" class="form-control" placeholder="10-digit mobile number" />
+        <span asp-validation-for="Phone" class="text-danger small"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="CompanyName" class="form-label"></label>
+        <input asp-for="CompanyName" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Source" class="form-label"></label>
+        <select asp-for="Source" class="form-select">
+            <option value="">-- Select Source --</option>
+            <option>Website</option><option>Referral</option><option>Cold Call</option><option>Email</option><option>Other</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" class="form-select">
+            @foreach (var s in new[]{"New","Contacted","Qualified","Unqualified","Lost"})
+            { <option>@s</option> }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Priority" class="form-label"></label>
+        <select asp-for="Priority" class="form-select">
+            <option>Low</option><option selected>Medium</option><option>High</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ExpectedValue" class="form-label"></label>
+        <input asp-for="ExpectedValue" class="form-control" type="number" min="0" step="0.01" />
+        <span asp-validation-for="ExpectedValue" class="text-danger small"></span>
+    </div>
+    <button class="btn btn-success">Save</button>
+    <a href="/Lead" class="btn btn-link">Cancel</a>
+</form>
+</div>
+
+@section Scripts { @await Html.PartialAsync("_ValidationScriptsPartial") }

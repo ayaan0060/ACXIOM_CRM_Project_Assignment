@@ -1,0 +1,45 @@
+@model IEnumerable<Lead>
+@{ ViewData["Title"] = "Leads"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>Leads</h4>
+    <a href="/Lead/Create" class="btn btn-primary btn-sm">+ New Lead</a>
+</div>
+
+<form class="d-flex mb-3 gap-2" method="get">
+    <input type="text" name="search" class="form-control" placeholder="Search name, company..." value="@ViewBag.Search" style="max-width:250px" />
+    <select name="status" class="form-select" style="max-width:160px">
+        <option value="">All Statuses</option>
+        @foreach (var s in new[]{"New","Contacted","Qualified","Unqualified","Converted","Lost"})
+        { <option value="@s" selected="@(ViewBag.StatusFilter==s)">@s</option> }
+    </select>
+    <button class="btn btn-outline-secondary btn-sm">Filter</button>
+</form>
+
+<div class="card">
+<table class="table table-hover mb-0">
+    <thead class="table-light"><tr><th>Name</th><th>Company</th><th>Source</th><th>Status</th><th>Priority</th><th>Created</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var l in Model)
+    {
+        <tr>
+            <td>@l.Name</td>
+            <td>@l.CompanyName</td>
+            <td>@l.Source</td>
+            <td><span class="badge bg-info text-dark">@l.Status</span></td>
+            <td>@l.Priority</td>
+            <td>@l.CreatedDate.ToString("dd MMM yyyy")</td>
+            <td>
+                <a href="/Lead/Details/@l.Id" class="btn btn-sm btn-outline-info">View</a>
+                <a href="/Lead/Edit/@l.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                @if (l.Status == "Qualified" && !l.IsConverted)
+                { <a href="/Lead/Convert/@l.Id" class="btn btn-sm btn-outline-success" onclick="return confirm('Convert to Customer?')">Convert</a> }
+                @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                { <a href="/Lead/Delete/@l.Id" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete?')">Delete</a> }
+            </td>
+        </tr>
+    }
+    @if (!Model.Any()) { <tr><td colspan="7" class="text-center text-muted">No leads found.</td></tr> }
+    </tbody>
+</table>
+</div>

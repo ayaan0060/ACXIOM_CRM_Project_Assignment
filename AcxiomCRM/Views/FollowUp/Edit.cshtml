@@ -1,0 +1,40 @@
+@model FollowUp
+@{ ViewData["Title"] = "Edit Follow-Up"; }
+
+<h4 class="mb-3">Edit Follow-Up</h4>
+<div class="card p-4" style="max-width:560px">
+<form method="post" asp-action="Edit">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-3">
+        <label asp-for="Subject" class="form-label"></label>
+        <input asp-for="Subject" class="form-control" />
+        <span asp-validation-for="Subject" class="text-danger small"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="FollowUpDate" class="form-label"></label>
+        <input asp-for="FollowUpDate" class="form-control" type="date" />
+        <span asp-validation-for="FollowUpDate" class="text-danger small"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="FollowUpType" class="form-label"></label>
+        <select asp-for="FollowUpType" class="form-select">
+            <option>Call</option><option>Meeting</option><option>Email</option><option>Task</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" class="form-select">
+            <option>Planned</option><option>Completed</option><option>Missed</option><option>Cancelled</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Notes" class="form-label"></label>
+        <textarea asp-for="Notes" class="form-control" rows="2"></textarea>
+    </div>
+    <button class="btn btn-success">Update</button>
+    <a href="/FollowUp" class="btn btn-link">Cancel</a>
+</form>
+</div>
+
+@section Scripts { @await Html.PartialAsync("_ValidationScriptsPartial") }

@@ -1,0 +1,52 @@
+@model Opportunity
+@{ ViewData["Title"] = "New Opportunity"; }
+
+<h4 class="mb-3">New Opportunity</h4>
+<div class="card p-4" style="max-width:560px">
+<form method="post" asp-action="Create">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger small"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="CustomerId" class="form-label">Customer</label>
+        <select asp-for="CustomerId" class="form-select">
+            <option value="">-- Select Customer --</option>
+            @foreach (var c in (IEnumerable<Customer>)ViewBag.Customers)
+            { <option value="@c.Id">@c.Name</option> }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Stage" class="form-label"></label>
+        <select asp-for="Stage" class="form-select">
+            @foreach (var s in new[]{"Qualification","Proposal","Negotiation","Won","Lost"})
+            { <option>@s</option> }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Amount" class="form-label"></label>
+        <input asp-for="Amount" class="form-control" type="number" min="0.01" step="0.01" />
+        <span asp-validation-for="Amount" class="text-danger small"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Probability" class="form-label">Probability (%)</label>
+        <input asp-for="Probability" class="form-control" type="number" min="0" max="100" />
+        <span asp-validation-for="Probability" class="text-danger small"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ExpectedCloseDate" class="form-label"></label>
+        <input asp-for="ExpectedCloseDate" class="form-control" type="date" />
+        <span asp-validation-for="ExpectedCloseDate" class="text-danger small"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Notes" class="form-label"></label>
+        <textarea asp-for="Notes" class="form-control" rows="2"></textarea>
+    </div>
+    <button class="btn btn-success">Save</button>
+    <a href="/Opportunity" class="btn btn-link">Cancel</a>
+</form>
+</div>
+
+@section Scripts { @await Html.PartialAsync("_ValidationScriptsPartial") }

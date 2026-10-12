@@ -1,0 +1,40 @@
+@model IEnumerable<Customer>
+@{ ViewData["Title"] = "Customers"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>Customers</h4>
+    <a href="/Customer/Create" class="btn btn-primary btn-sm">+ New Customer</a>
+</div>
+
+<form class="d-flex mb-3 gap-2" method="get">
+    <input type="text" name="search" class="form-control" placeholder="Search name, email, phone, company..." value="@ViewBag.Search" style="max-width:350px" />
+    <button class="btn btn-outline-secondary btn-sm">Search</button>
+</form>
+
+<div class="card">
+<table class="table table-hover mb-0">
+    <thead class="table-light"><tr><th>Name</th><th>Email</th><th>Phone</th><th>Company</th><th>Status</th><th>Created</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var c in Model)
+    {
+        <tr>
+            <td>@c.Name</td>
+            <td>@c.Email</td>
+            <td>@c.Phone</td>
+            <td>@c.CompanyName</td>
+            <td><span class="badge bg-@(c.Status=="Active"?"success":"secondary")">@c.Status</span></td>
+            <td>@c.CreatedDate.ToString("dd MMM yyyy")</td>
+            <td>
+                <a href="/Customer/Details/@c.Id" class="btn btn-sm btn-outline-info">View</a>
+                <a href="/Customer/Edit/@c.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                {
+                    <a href="/Customer/Delete/@c.Id" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this customer?')">Delete</a>
+                }
+            </td>
+        </tr>
+    }
+    @if (!Model.Any()) { <tr><td colspan="7" class="text-center text-muted">No customers found.</td></tr> }
+    </tbody>
+</table>
+</div>

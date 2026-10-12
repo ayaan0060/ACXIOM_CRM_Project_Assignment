@@ -1,0 +1,43 @@
+@model IEnumerable<Opportunity>
+@{ ViewData["Title"] = "Opportunities"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>Opportunities</h4>
+    <a href="/Opportunity/Create" class="btn btn-primary btn-sm">+ New Opportunity</a>
+</div>
+
+<form class="d-flex mb-3 gap-2" method="get">
+    <input type="text" name="search" class="form-control" placeholder="Search name..." value="@ViewBag.Search" style="max-width:250px" />
+    <select name="stage" class="form-select" style="max-width:160px">
+        <option value="">All Stages</option>
+        @foreach (var s in new[]{"Qualification","Proposal","Negotiation","Won","Lost"})
+        { <option value="@s" selected="@(ViewBag.StageFilter==s)">@s</option> }
+    </select>
+    <button class="btn btn-outline-secondary btn-sm">Filter</button>
+</form>
+
+<div class="card">
+<table class="table table-hover mb-0">
+    <thead class="table-light"><tr><th>Name</th><th>Customer</th><th>Stage</th><th>Amount</th><th>Probability</th><th>Close Date</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var o in Model)
+    {
+        <tr>
+            <td>@o.Name</td>
+            <td>@o.Customer?.Name</td>
+            <td><span class="badge bg-primary">@o.Stage</span></td>
+            <td>₹@o.Amount.ToString("N0")</td>
+            <td>@o.Probability%</td>
+            <td>@o.ExpectedCloseDate.ToString("dd MMM yyyy")</td>
+            <td>
+                <a href="/Opportunity/Details/@o.Id" class="btn btn-sm btn-outline-info">View</a>
+                <a href="/Opportunity/Edit/@o.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                { <a href="/Opportunity/Delete/@o.Id" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete?')">Delete</a> }
+            </td>
+        </tr>
+    }
+    @if (!Model.Any()) { <tr><td colspan="7" class="text-center text-muted">No opportunities found.</td></tr> }
+    </tbody>
+</table>
+</div>

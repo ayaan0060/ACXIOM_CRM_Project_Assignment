@@ -1,0 +1,32 @@
+@model IEnumerable<AuditLog>
+@{ ViewData["Title"] = "Audit Log"; }
+
+<h4 class="mb-3">Audit Log</h4>
+
+<form class="d-flex mb-3 gap-2" method="get">
+    <input type="text" name="action" class="form-control" placeholder="Action (Login, Create...)" value="@ViewBag.ActionFilter" style="max-width:180px" />
+    <input type="text" name="entity" class="form-control" placeholder="Entity (Customer...)" value="@ViewBag.EntityFilter" style="max-width:180px" />
+    <button class="btn btn-outline-secondary btn-sm">Filter</button>
+</form>
+
+<div class="card">
+<table class="table table-sm table-hover mb-0">
+    <thead class="table-light"><tr><th>Date</th><th>User</th><th>Action</th><th>Entity</th><th>Record</th><th>Old</th><th>New</th><th>IP</th></tr></thead>
+    <tbody>
+    @foreach (var a in Model)
+    {
+        <tr>
+            <td><small>@a.CreatedDate.ToString("dd MMM HH:mm")</small></td>
+            <td><small>@a.UserId[..Math.Min(8,a.UserId.Length)]…</small></td>
+            <td><span class="badge bg-secondary">@a.Action</span></td>
+            <td>@a.EntityName</td>
+            <td>@a.RecordId</td>
+            <td class="text-muted"><small>@a.OldValue</small></td>
+            <td><small>@a.NewValue</small></td>
+            <td><small>@a.IpAddress</small></td>
+        </tr>
+    }
+    @if (!Model.Any()) { <tr><td colspan="8" class="text-center text-muted">No audit records.</td></tr> }
+    </tbody>
+</table>
+</div>
